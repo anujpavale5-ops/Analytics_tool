@@ -73,7 +73,14 @@ function setupNavigation() {
             if (targetId === 'view-projects') loadProjects();
             if (targetId === 'view-datasets') populateProjectSelects();
             if (targetId === 'view-analytics') populateProjectSelects();
-            if (targetId === 'view-sql') populateProjectSelects();
+            if (targetId === 'view-sql') {
+                populateProjectSelects();
+                // If Monaco was initialized while hidden, it has 0x0 layout. 
+                // We MUST call layout() when it becomes visible.
+                if (window.sqlEditorInstance) {
+                    setTimeout(() => window.sqlEditorInstance.layout(), 50);
+                }
+            }
             if (targetId === 'view-reports') populateProjectSelects();
             if (targetId === 'view-dashboards') loadDashboards();
         });
@@ -1608,6 +1615,16 @@ function setupHorizontalResizers() {
 // Initialize Monaco Editor
 function initMonaco() {
     if (window.require && !sqlEditorInstance) {
+        // Fix for Cloudflare/CDN CORS issues with Monaco Web Workers
+        window.MonacoEnvironment = {
+            getWorkerUrl: function(workerId, label) {
+                return `data:text/javascript;charset=utf-8,${encodeURIComponent(`
+                    self.MonacoEnvironment = { baseUrl: 'https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.38.0/min/' };
+                    importScripts('https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.38.0/min/vs/base/worker/workerMain.js');
+                `)}`;
+            }
+        };
+        
         require(['vs/editor/editor.main'], function() {
             sqlEditorInstance = monaco.editor.create(document.getElementById('sql-editor-container'), {
                 value: "-- Write your SQL query here\nSELECT * FROM ...",
