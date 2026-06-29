@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <canvas id="myChart" width="400" height="400"></canvas>
+    <script>
+        try {
+            const ctx = document.getElementById('myChart');
+            new Chart(ctx, {
+                type: 'pie',
+                data: {
+                    labels: ['HR', 'Eng'],
+                    datasets: [{
+                        label: 'count_val',
+                        data: [2, 4],
+                        backgroundColor: '#2563EB',
+                        borderColor: '#1D4ED8',
+                        borderWidth: 1,
+                        borderRadius: 0
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    color: '#000',
+                    scales: {},
+                    plugins: { legend: { labels: { color: '#000' } } }
+                }
+            });
+            console.log("SUCCESS");
+        } catch(e) {
+            console.log("ERROR", e.message);
+        }
+    </script>
+</body>
+</html>
