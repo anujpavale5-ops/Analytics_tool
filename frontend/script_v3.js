@@ -1637,8 +1637,13 @@ function initMonaco() {
         });
     }
 }
-// Call init if require is ready, or wait (usually require loads fast enough here)
-setTimeout(initMonaco, 500);
+// Wait for require.js to load, then init
+let monacoLoaderInterval = setInterval(() => {
+    if (window.require) {
+        initMonaco();
+        clearInterval(monacoLoaderInterval);
+    }
+}, 200);
 
 function insertTextAtCursor(text) {
     if(!sqlEditorInstance) return;
