@@ -12,7 +12,7 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-DATABASE_URL = os.environ.get("DATABASE_URL", "postgresql://postgres:anujpavale7686@localhost:5432/analytics_copilot")
+DATABASE_URL =os.getenv("DATABASE_URL")
 
 # Ensure database exists before connecting to it
 def _ensure_db_exists():
