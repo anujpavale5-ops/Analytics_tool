@@ -1625,6 +1625,9 @@ function initMonaco() {
             }
         };
         
+        // Configure require.js dynamically in case Cloudflare Rocket Loader delayed the initial config
+        require.config({ paths: { 'vs': 'https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.38.0/min/vs' }});
+        
         require(['vs/editor/editor.main'], function() {
             sqlEditorInstance = monaco.editor.create(document.getElementById('sql-editor-container'), {
                 value: "-- Write your SQL query here\nSELECT * FROM ...",
