@@ -16,6 +16,6 @@ timeout /t 3 /nobreak > nul
 
 :: Open the frontend in the default web browser
 echo Opening Frontend...
-start "" "http://127.0.0.1:8080/app.html"
+start "" "http://127.0.0.1:8080/index.html"
 
 echo Application launched! You can close this black window.
