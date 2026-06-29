@@ -1,5 +1,5 @@
 // script.js - V6 Enterprise Analytics Copilot
-const API_BASE = 'http://127.0.0.1:8000';
+const API_BASE = "https://analytics-tool-n3t6.onrender.com";
 let currentUser = null;
 let currentWorkspace = null;
 let currentProject = null;
