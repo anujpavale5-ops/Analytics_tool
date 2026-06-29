@@ -1,4 +1,4 @@
-﻿/* 
+/* 
 =========================================================
 V6 ENTERPRISE ANALYTICS COPILOT STYLES 
 Inspired by Notion, Databricks, Tableau, Power BI
@@ -825,4 +825,117 @@ p {
     font-size: 12px;
     margin-top: 4px;
     display: none;
+}
+
+/* Mobile Responsive Overrides */
+.visible-mobile { display: none !important; }
+.sidebar-backdrop { display: none; }
+
+@media (max-width: 768px) {
+    /* Utilities */
+    .visible-mobile { display: flex !important; }
+    .hidden-mobile { display: none !important; }
+
+    /* Layout & Navigation */
+    .app-container {
+        position: relative;
+    }
+    
+    .sidebar {
+        position: fixed;
+        left: 0;
+        top: 0;
+        bottom: 0;
+        z-index: 1000;
+        transform: translateX(-100%);
+        transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        width: 280px !important;
+    }
+    
+    .sidebar.open {
+        transform: translateX(0);
+    }
+    
+    .sidebar-backdrop {
+        display: none;
+        position: fixed;
+        inset: 0;
+        background-color: rgba(0,0,0,0.5);
+        z-index: 999;
+        opacity: 0;
+        transition: opacity 0.3s;
+    }
+    
+    .sidebar-backdrop.show {
+        display: block;
+        opacity: 1;
+    }
+
+    .top-nav {
+        padding: 0.75rem 1rem !important;
+    }
+
+    .search-container-header {
+        display: none; /* Hide global search on mobile to save space */
+    }
+    
+    .view-container {
+        padding: 1rem !important;
+    }
+
+    /* Grids & Flex containers */
+    .kpi-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .px-8 { padding-left: 1rem !important; padding-right: 1rem !important; }
+    .py-5 { padding-top: 1rem !important; padding-bottom: 1rem !important; }
+
+    /* SQL & Data Workspaces */
+    .sql-workspace {
+        padding: 1rem !important;
+        flex-direction: column;
+    }
+    
+    #schema-explorer-panel, #sql-editor-panel {
+        width: 100% !important;
+        position: static !important;
+        max-height: none !important;
+    }
+    
+    .editor-toolbar {
+        flex-direction: column;
+        align-items: stretch !important;
+        gap: 0.5rem;
+    }
+    
+    .editor-toolbar .flex {
+        justify-content: space-between;
+        width: 100%;
+    }
+
+    /* Datasets Workspace */
+    #dataset-workspace {
+        flex-direction: column;
+        padding: 1rem !important;
+    }
+    #dataset-list-panel, #dataset-preview-panel {
+        width: 100% !important;
+        border-right: none !important;
+    }
+    #dataset-preview-panel {
+        margin-top: 1rem;
+    }
+    
+    /* Reports View */
+    #dashboard-reports-grid {
+        grid-template-columns: 1fr !important;
+    }
+
+    /* Auth Overlay */
+    .auth-card {
+        padding: 1.5rem;
+        margin: 1rem;
+        width: calc(100% - 2rem);
+    }
 }

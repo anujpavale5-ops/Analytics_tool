@@ -56,16 +56,21 @@ window.addEventListener('unhandledrejection', function(e) {
 
     <!-- Main App Layout -->
     <div class="app-container" id="main-app" style="display: none;">
+        <!-- Mobile Sidebar Backdrop -->
+        <div id="mobile-sidebar-backdrop" class="sidebar-backdrop"></div>
         <!-- Sidebar Navigation -->
         <aside class="sidebar" id="app-sidebar">
-            <div class="sidebar-brand">
-                <button id="sidebar-toggle" class="sidebar-toggle" title="Toggle Sidebar">
+            <div class="sidebar-brand" style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
+                <button id="sidebar-toggle" class="sidebar-toggle hidden-mobile" title="Toggle Sidebar">
                     <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
                 </button>
                 <span class="brand-text flex items-center gap-2">
                     <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><path d="m19 9-5 5-4-4-3 3"/></svg>
                     Analytics
                 </span>
+                <button id="mobile-sidebar-close" class="sidebar-toggle visible-mobile" title="Close Sidebar">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+                </button>
             </div>
             <nav class="sidebar-nav">
                 <button class="nav-item active" data-target="view-home" title="Home">
@@ -109,7 +114,10 @@ window.addEventListener('unhandledrejection', function(e) {
         <main class="main-content">
             <header class="top-nav" style="display: flex; justify-content: space-between; align-items: center; padding: 1rem 2rem; background-color: var(--bg-card); border-bottom: 1px solid var(--border-color); position: sticky; top: 0; z-index: 100;">
                 <div style="display: flex; align-items: center; gap: 1rem; flex: 1;">
-                    <div style="position: relative; width: 100%; max-width: 400px;">
+                    <button id="mobile-menu-toggle" class="btn btn-secondary visible-mobile" style="border: none; padding: 0.25rem;" title="Menu">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
+                    </button>
+                    <div class="search-container-header" style="position: relative; width: 100%; max-width: 400px;">
                         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--text-muted)" stroke-width="2" style="position: absolute; left: 12px; top: 50%; transform: translateY(-50%);"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
                         <input type="text" id="global-search" class="form-input" placeholder="Search projects, datasets, or queries... (Ctrl+K)" style="padding-left: 2.5rem; border-radius: 20px; background-color: var(--bg-primary);">
                     </div>

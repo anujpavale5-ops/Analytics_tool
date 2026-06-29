@@ -52,6 +52,21 @@ function setupNavigation() {
         });
     }
 
+    // Mobile Navigation Logic
+    const mobileToggle = document.getElementById('mobile-menu-toggle');
+    const mobileClose = document.getElementById('mobile-sidebar-close');
+    const mobileBackdrop = document.getElementById('mobile-sidebar-backdrop');
+    const appSidebar = document.getElementById('app-sidebar');
+
+    const toggleMobileMenu = () => {
+        appSidebar.classList.toggle('open');
+        mobileBackdrop.classList.toggle('show');
+    };
+
+    if (mobileToggle) mobileToggle.addEventListener('click', toggleMobileMenu);
+    if (mobileClose) mobileClose.addEventListener('click', toggleMobileMenu);
+    if (mobileBackdrop) mobileBackdrop.addEventListener('click', toggleMobileMenu);
+
     document.querySelectorAll('.sidebar-nav .nav-item').forEach(btn => {
         btn.addEventListener('click', (e) => {
             const btnTarget = e.currentTarget;
@@ -83,6 +98,11 @@ function setupNavigation() {
             }
             if (targetId === 'view-reports') populateProjectSelects();
             if (targetId === 'view-dashboards') loadDashboards();
+
+            // Auto-close sidebar on mobile after clicking a link
+            if (window.innerWidth <= 768 && appSidebar.classList.contains('open')) {
+                toggleMobileMenu();
+            }
         });
     });
 }
