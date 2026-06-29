@@ -314,7 +314,7 @@ async function populateProjectSelects() {
                 if (!select) return;
                 
                 const currentVal = select.value;
-                const optionsHtml = '<option value=">' + defaultText + '</option>' + 
+                const optionsHtml = '<option value="">' + defaultText + '</option>' + 
                     data.projects.map(p => `<option value="${p.id}">${p.name}</option>`).join('');
                 
                 select.innerHTML = optionsHtml;
