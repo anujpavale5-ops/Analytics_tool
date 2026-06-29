@@ -1614,47 +1614,57 @@ function setupHorizontalResizers() {
 
 // Initialize Monaco Editor
 function initMonaco() {
-    if (window.require && !sqlEditorInstance) {
-        // Fix for Cloudflare/CDN CORS issues with Monaco Web Workers
-        window.MonacoEnvironment = {
-            getWorkerUrl: function(workerId, label) {
-                return `data:text/javascript;charset=utf-8,${encodeURIComponent(`
-                    self.MonacoEnvironment = { baseUrl: 'https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.38.0/min/' };
-                    importScripts('https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.38.0/min/vs/base/worker/workerMain.js');
-                `)}`;
-            }
-        };
+    try {
+        const container = document.getElementById('sql-editor-container');
+        if (!container) return;
         
-        // Configure require.js dynamically in case Cloudflare Rocket Loader delayed the initial config
-        require.config({ paths: { 'vs': 'https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.38.0/min/vs' }});
-        
-        require(['vs/editor/editor.main'], function() {
-            sqlEditorInstance = monaco.editor.create(document.getElementById('sql-editor-container'), {
-                value: "-- Write your SQL query here\nSELECT * FROM ...",
-                language: 'sql',
-                theme: document.documentElement.getAttribute('data-theme') === 'light' ? 'vs' : 'vs-dark',
-                automaticLayout: true,
-                minimap: { enabled: true, renderCharacters: false },
-                fontFamily: "'JetBrains Mono', 'Fira Code', monospace",
-                fontSize: 14,
-                lineHeight: 24,
-                padding: { top: 16 },
-                folding: true,
-                scrollBeyondLastLine: false,
-                bracketPairColorization: { enabled: true },
-                folding: true,
-                lineNumbers: "on",
-                suggestOnTriggerCharacters: true
-            });
+        if (window.require && !sqlEditorInstance) {
+            container.innerHTML = '<div style="padding: 20px; color: #888;">Loading Editor...</div>';
             
-            if (document.fonts && document.fonts.ready) {
-                document.fonts.ready.then(() => {
-                    if (monaco.editor.remeasureFonts) {
-                        monaco.editor.remeasureFonts();
-                    }
+            // Fix for Cloudflare/CDN CORS issues with Monaco Web Workers
+            window.MonacoEnvironment = {
+                getWorkerUrl: function(workerId, label) {
+                    return `data:text/javascript;charset=utf-8,${encodeURIComponent(`
+                        self.MonacoEnvironment = { baseUrl: 'https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.38.0/min/' };
+                        importScripts('https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.38.0/min/vs/base/worker/workerMain.js');
+                    `)}`;
+                }
+            };
+            
+            require.config({ paths: { 'vs': 'https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.38.0/min/vs' }});
+            
+            require(['vs/editor/editor.main'], function() {
+                container.innerHTML = ''; // clear loading
+                sqlEditorInstance = monaco.editor.create(container, {
+                    value: "-- Write your SQL query here\nSELECT * FROM ...",
+                    language: 'sql',
+                    theme: document.documentElement.getAttribute('data-theme') === 'light' ? 'vs' : 'vs-dark',
+                    automaticLayout: true,
+                    minimap: { enabled: true, renderCharacters: false },
+                    fontFamily: "'JetBrains Mono', 'Fira Code', monospace",
+                    fontSize: 14,
+                    lineHeight: 24,
+                    padding: { top: 16 },
+                    folding: true,
+                    scrollBeyondLastLine: false,
+                    bracketPairColorization: { enabled: true },
+                    lineNumbers: "on",
+                    suggestOnTriggerCharacters: true
                 });
-            }
-        });
+                
+                if (document.fonts && document.fonts.ready) {
+                    document.fonts.ready.then(() => {
+                        if (monaco.editor.remeasureFonts) {
+                            monaco.editor.remeasureFonts();
+                        }
+                    });
+                }
+            }, function(err) {
+                container.innerHTML = `<div style="padding: 20px; color: red;">Failed to load editor from CDN: ${err.message}</div>`;
+            });
+        }
+    } catch(e) {
+        document.getElementById('sql-editor-container').innerHTML = `<div style="padding: 20px; color: red;">Error: ${e.message}</div>`;
     }
 }
 // Wait for require.js to load, then init
