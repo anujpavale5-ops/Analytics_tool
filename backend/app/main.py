@@ -35,6 +35,10 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+@app.get("/health")
+def health_check():
+    return {"status": "ok"}
+
 import tempfile
 UPLOAD_DIR = os.path.join(tempfile.gettempdir(), "analytics_uploads")
 if not os.path.exists(UPLOAD_DIR):

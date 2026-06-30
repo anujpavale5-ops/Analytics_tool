@@ -28,6 +28,20 @@ window.addEventListener('unhandledrejection', function(e) {
     </script>
 </head>
 <body>
+    <!-- Cold Start Overlay -->
+    <div id="cold-start-overlay" style="display: none;">
+        <div class="cold-start-card">
+            <div class="cs-spinner"></div>
+            <div class="cs-title">Starting Analytics Copilot</div>
+            <div class="cs-subtitle" id="cs-subtitle-text">Waking up the backend server...</div>
+            <div class="cs-message" id="cs-message-text">The first request after inactivity may take up to 60 seconds.</div>
+            <div class="cs-progress-container">
+                <div class="cs-progress-bar" id="cs-progress-bar"></div>
+            </div>
+            <button id="cs-retry-btn" class="btn btn-primary" style="display: none;" onclick="window.location.reload();">Retry Connection</button>
+        </div>
+    </div>
+
     <!-- Auth Overlay -->
     <div id="auth-overlay" class="auth-overlay">
         <div class="auth-card">

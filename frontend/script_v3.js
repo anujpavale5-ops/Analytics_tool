@@ -11,13 +11,84 @@ const mainApp = document.getElementById('main-app');
 const userDisplay = document.getElementById('user-display');
 
 
+// Cold Start Handling
+async function handleColdStart() {
+    const overlay = document.getElementById('cold-start-overlay');
+    const progressBar = document.getElementById('cs-progress-bar');
+    const subtitle = document.getElementById('cs-subtitle-text');
+    const message = document.getElementById('cs-message-text');
+    const retryBtn = document.getElementById('cs-retry-btn');
+    const submitBtn = document.getElementById('auth-submit-btn');
+    const tabLogin = document.getElementById('tab-login');
+    const tabRegister = document.getElementById('tab-register');
+
+    // Disable auth buttons
+    if(submitBtn) submitBtn.disabled = true;
+    if(tabLogin) tabLogin.disabled = true;
+    if(tabRegister) tabRegister.disabled = true;
+    
+    overlay.style.display = 'flex';
+    
+    const maxRetries = 14; // 14 * 5 = 70 seconds
+    const interval = 5000;
+    let attempt = 0;
+    
+    // Start progress animation
+    progressBar.style.width = '0%';
+    setTimeout(() => {
+        progressBar.style.transition = 'width 70s linear';
+        progressBar.style.width = '100%';
+    }, 100);
+
+    const checkHealth = async () => {
+        try {
+            const res = await fetch(`${API_BASE}/health`, { method: 'GET', cache: 'no-store' });
+            if (res.ok) {
+                // Success!
+                overlay.style.display = 'none';
+                if(submitBtn) submitBtn.disabled = false;
+                if(tabLogin) tabLogin.disabled = false;
+                if(tabRegister) tabRegister.disabled = false;
+                return true;
+            }
+        } catch (e) {
+            // Fetch failed, probably still sleeping
+        }
+        return false;
+    };
+
+    // Initial check just in case it's already awake
+    if (await checkHealth()) return;
+
+    return new Promise((resolve) => {
+        const timer = setInterval(async () => {
+            attempt++;
+            if (await checkHealth()) {
+                clearInterval(timer);
+                resolve();
+            } else if (attempt >= maxRetries) {
+                clearInterval(timer);
+                progressBar.style.transition = 'none';
+                progressBar.style.width = '100%';
+                progressBar.style.background = 'var(--danger)';
+                subtitle.innerText = "Unable to wake the server.";
+                message.innerText = "Please refresh the page after a minute.";
+                retryBtn.style.display = 'inline-flex';
+                document.querySelector('.cs-spinner').style.display = 'none';
+            }
+        }, interval);
+    });
+}
+
 // Startup
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', async () => {
     // Chart Defaults
     if (typeof Chart !== 'undefined') {
         Chart.defaults.font.family = "'Inter', system-ui, sans-serif";
         Chart.defaults.font.size = 12;
     }
+
+    await handleColdStart();
 
     checkAuth();
     
